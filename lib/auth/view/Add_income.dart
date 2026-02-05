@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:new_project/controller/income_controller.dart';
 
 class AddIncome extends StatefulWidget {
   const AddIncome({super.key});
@@ -11,6 +12,10 @@ class AddIncome extends StatefulWidget {
 }
 
 class _AddIncomeState extends State<AddIncome> {
+  final IncomeController incomeController = Get.put(IncomeController());
+
+  final TextEditingController amountController = TextEditingController();
+
   DateTime? selectedDate;
 
   Future<void> pickDate() async {
@@ -51,25 +56,23 @@ class _AddIncomeState extends State<AddIncome> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// HEADER
+              // 🔙 Back Button
               Row(
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      Get.back();
-                    },
+                    onTap: () => Get.back(),
                     child: Container(
                       height: 50,
                       width: 50,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(50),
-                        color: Color(0xffee6856),
+                        color: const Color(0xffee6856),
                       ),
-                      child: Icon(Icons.arrow_back),
+                      child: const Icon(Icons.arrow_back),
                     ),
                   ),
                   SizedBox(width: 60.w),
-                  Text(
+                  const Text(
                     'Add Income',
                     style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   )
@@ -77,14 +80,16 @@ class _AddIncomeState extends State<AddIncome> {
               ),
 
               SizedBox(height: 40.h),
+
               Padding(
                 padding: const EdgeInsets.only(left: 80),
                 child: Image.asset('assets/download (1).png'),
               ),
+
               SizedBox(height: 30.h),
 
-              /// AMOUNT
-              Text(
+              // AMOUNT INPUT
+              const Text(
                 'Enter Amount',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
@@ -92,12 +97,13 @@ class _AddIncomeState extends State<AddIncome> {
 
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey,
+                  color: Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: TextField(
+                  controller: amountController,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
                     hintText: "  Amount",
                   ),
@@ -106,8 +112,7 @@ class _AddIncomeState extends State<AddIncome> {
 
               SizedBox(height: 25),
 
-              /// DATE PICKER TITLE
-              Text(
+              const Text(
                 "Select Date",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
@@ -116,23 +121,25 @@ class _AddIncomeState extends State<AddIncome> {
               GestureDetector(
                 onTap: pickDate,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: Colors.grey.shade400),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.calendar_today, color: Colors.deepOrange),
+                      const Icon(Icons.calendar_today,
+                          color: Colors.deepOrange),
                       SizedBox(width: 12),
                       Text(
                         selectedDate == null
                             ? "Select Date"
                             : DateFormat('dd-MM-yyyy').format(selectedDate!),
-                        style: TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 16),
                       ),
-                      Spacer(),
-                      Icon(Icons.arrow_drop_down),
+                      const Spacer(),
+                      const Icon(Icons.arrow_drop_down),
                     ],
                   ),
                 ),
@@ -140,20 +147,43 @@ class _AddIncomeState extends State<AddIncome> {
 
               SizedBox(height: 40.h),
 
+              // SUBMIT BUTTON
               Center(
-                child: Container(
-                  height: 60,
-                  width: 180,
-                  decoration: BoxDecoration(
-                      color: Color(0xffee6856),
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Center(
-                    child: Text(
-                      "Submit",
-                      style: TextStyle(
-                        fontSize: 22,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                child: GestureDetector(
+                  onTap: () {
+                    if (amountController.text.isEmpty) {
+                      Get.snackbar("Error", "Enter amount");
+                      return;
+                    }
+                    if (selectedDate == null) {
+                      Get.snackbar("Error", "Select date");
+                      return;
+                    }
+
+                    double amount = double.parse(amountController.text);
+
+                    incomeController.addIncome(
+                      amount,
+                      "Income",
+                      selectedDate!,
+                    );
+
+                    Get.back();
+                  },
+                  child: Container(
+                    height: 60,
+                    width: 180,
+                    decoration: BoxDecoration(
+                        color: const Color(0xffee6856),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: const Center(
+                      child: Text(
+                        "Submit",
+                        style: TextStyle(
+                          fontSize: 22,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

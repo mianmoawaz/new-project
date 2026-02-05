@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:new_project/auth/view/Add_expense.dart';
 import 'package:new_project/auth/view/Add_income.dart';
+import 'package:new_project/controller/auth_controller.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -13,6 +13,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  final AuthController authController = Get.put(AuthController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +38,7 @@ class _ProfileState extends State<Profile> {
                   ),
                 ),
                 SizedBox(
-                  width: 120.w,
+                  width: 110.w,
                 ),
                 Text(
                   'profile',
@@ -244,37 +245,42 @@ class _ProfileState extends State<Profile> {
             SizedBox(
               height: 20.h,
             ),
-            Container(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              margin: EdgeInsets.only(left: 20, right: 20),
-              height: 65,
-              width: 400,
-              decoration: BoxDecoration(
-                  color: Color.fromARGB(227, 238, 104, 86),
-                  borderRadius: BorderRadius.circular(20)),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.logout,
-                    color: Colors.white,
-                    size: 40,
-                  ),
-                  SizedBox(
-                    width: 20.w,
-                  ),
-                  Text(
-                    'Logout',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Spacer(),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                  )
-                ],
+            GestureDetector(
+              onTap: () {
+                authController.logout();
+              },
+              child: Container(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                margin: EdgeInsets.only(left: 20, right: 20),
+                height: 65,
+                width: 400,
+                decoration: BoxDecoration(
+                    color: Color.fromARGB(227, 238, 104, 86),
+                    borderRadius: BorderRadius.circular(20)),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.logout,
+                      color: Colors.white,
+                      size: 40,
+                    ),
+                    SizedBox(
+                      width: 20.w,
+                    ),
+                    Text(
+                      'Logout',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white,
+                    )
+                  ],
+                ),
               ),
             ),
             SizedBox(
